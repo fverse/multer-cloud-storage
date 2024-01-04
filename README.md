@@ -1,6 +1,6 @@
 ## Multer IBM COS Storage
 
-IBM Cloud  Object Storage as the storage engine for [multer](https://www.npmjs.com/package/multer)
+IBM Cloud  Object Storage as the storage engine for [multer](https://github.com/expressjs/multer)
 
 
 ### Installation
