@@ -1,0 +1,14 @@
+{
+  "name": "multer-ibm-cos-storage",
+  "version": "1.0.0",
+  "description": "IBM Cloud Object Storage as the storage engine for Multer ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
