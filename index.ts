@@ -59,6 +59,7 @@ const getFilename = (req: any, file: any, cb: any) => {
   });
 };
 
+/** Validate the required params */
 const validateStorageParams = (params: StorageParams) => {
   let errors: StorageParamError[] = [];
 
