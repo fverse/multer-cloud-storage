@@ -40,12 +40,58 @@ interface StorageParams {
   signatureVersion?: string;
 }
 
-/** Generates a random hexadecimal filename. */
-function getFilename(req: any, file: any, cb: any) {
-  crypto.randomBytes(16, function (err, raw) {
-    cb(err, err ? undefined : raw.toString("hex"));
-  });
+/** Represents an error related to storage parameters. */
+interface StorageParamError {
+  /** Name of the parameter that caused the error. */
+  param: string;
+  /** Error message for the param. */
+  message: string;
 }
+
+/** Generates a random hexadecimal filename. */
+const getFilename = (req: any, file: any, cb: any) => {
+  crypto.randomBytes(16, (err, buf) => {
+    if (!err) {
+      cb(err, buf.toString("hex"));
+    } else {
+      cb(err, null);
+    }
+  });
+};
+
+const validateStorageParams = (params: StorageParams) => {
+  let errors: StorageParamError[] = [];
+
+  if (!params.endpoint) {
+    errors.push({
+      param: "endpoint",
+      message: "Failed to upload file: endpoint cannot be empty.",
+    });
+  }
+
+  if (!params.bucket)
+    errors.push({
+      param: "bucket",
+      message: "Failed to upload file: bucket name cannot be empty.",
+    });
+
+  if (!params.apiKeyId)
+    errors.push({
+      param: "apiKeyId",
+      message:
+        "Failed to upload file: Failed to upload file: API KEY ID cannot be empty.",
+    });
+
+  if (!params.serviceInstanceId)
+    errors.push({
+      param: "serviceInstanceId",
+      message: "Failed to upload file: Service Instance Id cannot be empty.",
+    });
+
+  if (errors.length > 0) {
+    throw errors;
+  }
+};
 
 class CosStorage implements StorageEngine {
   private cos: ibm.S3;
@@ -53,6 +99,8 @@ class CosStorage implements StorageEngine {
   private getObjectKey: any;
 
   constructor(opts: StorageParams) {
+    validateStorageParams(opts);
+
     this.bucket = opts.bucket;
     this.getObjectKey = opts.key || getFilename;
     /** Constructs a service object */
@@ -107,7 +155,7 @@ class CosStorage implements StorageEngine {
 
   /**
    * Deletes a file from IBM Cloud Object Storage.
-   * 
+   *
    * This is called in the event that an error occurs
    */
   _removeFile(
@@ -121,12 +169,11 @@ class CosStorage implements StorageEngine {
     };
 
     this.cos.deleteObject(params, function (err, data) {
-      if (err) {
-        // TODO: Handle the error
-        callback(err);
-      } else {
+      if (!err) {
         callback(null);
       }
+      // TODO: Handle the error
+      callback(err);
     });
   }
 }
@@ -134,7 +181,7 @@ class CosStorage implements StorageEngine {
 /**
  * Initializes a Multer instance for multiple file uploads to IBM Cloud Object Storage (COS).
  *
- * @param {StorageParams} opts - Configuration options for COS and Multer.
+ * @param {StorageParams} params - Configuration options for COS and Multer.
  * @returns A Multer instance configured for multiple file uploads.
  *
  * This function sets up Multer with a custom `CosStorage` engine for handling
@@ -150,23 +197,25 @@ class CosStorage implements StorageEngine {
  * app.post('/upload', cosMultipleUpload({...params}), (req, res) => {});
  * ```
  */
-export const cosMultipleUpload = (opts: StorageParams) =>
-  multer({
-    fileFilter: opts.fileFilter,
+export const cosMultipleUpload = (params: StorageParams) => {
+  validateStorageParams(params);
+  return multer({
+    fileFilter: params.fileFilter,
     storage: new CosStorage({
-      bucket: opts.bucket,
-      key: opts.key,
-      endpoint: opts.endpoint,
-      apiKeyId: opts.apiKeyId,
-      serviceInstanceId: opts.serviceInstanceId,
-      signatureVersion: opts.signatureVersion || "iam",
+      bucket: params.bucket,
+      key: params.key,
+      endpoint: params.endpoint,
+      apiKeyId: params.apiKeyId,
+      serviceInstanceId: params.serviceInstanceId,
+      signatureVersion: params.signatureVersion || "iam",
     }),
-  }).array(opts.fieldName || "files", opts.maxCount);
+  }).array(params.fieldName || "files", params.maxCount);
+};
 
 /**
  * Initializes a Multer instance for single file uploads to IBM Cloud Object Storage (COS).
  *
- * @param {StorageParams} opts - Configuration options for COS and Multer.
+ * @param {StorageParams} params - Configuration options for COS and Multer.
  * @returns A Multer instance for single file uploads.
  *
  * The function configures Multer with a custom `CosStorage` engine and optional file filtering.
@@ -179,17 +228,19 @@ export const cosMultipleUpload = (opts: StorageParams) =>
  * app.post('/upload', cosSingleUpload({...options}), (req, res) => {});
  * ```
  */
-export const cosSingleUpload = (opts: StorageParams) =>
-  multer({
-    fileFilter: opts.fileFilter,
+export const cosSingleUpload = (params: StorageParams) => {
+  validateStorageParams(params);
+  return multer({
+    fileFilter: params.fileFilter,
     storage: new CosStorage({
-      bucket: opts.bucket,
-      key: opts.key,
-      endpoint: opts.endpoint,
-      apiKeyId: opts.apiKeyId,
-      serviceInstanceId: opts.serviceInstanceId,
-      signatureVersion: opts.signatureVersion || "iam",
+      bucket: params.bucket,
+      key: params.key,
+      endpoint: params.endpoint,
+      apiKeyId: params.apiKeyId,
+      serviceInstanceId: params.serviceInstanceId,
+      signatureVersion: params.signatureVersion || "iam",
     }),
-  }).single(opts.fieldName || "file");
+  }).single(params.fieldName || "file");
+};
 
 export default (opts: StorageParams) => new CosStorage(opts);
