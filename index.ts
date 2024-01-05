@@ -80,7 +80,7 @@ const validateStorageParams = (params: StorageParams) => {
     errors.push({
       param: "apiKeyId",
       message:
-        "Failed to upload file: Failed to upload file: API KEY ID cannot be empty.",
+        "Failed to upload file: API KEY ID cannot be empty.",
     });
 
   if (!params.serviceInstanceId)
