@@ -8,4 +8,4 @@ IBM Cloud  Object Storage as the storage engine for [multer](https://github.com/
 To install the package, run the following command in your project directory:
 
 ```bash
-npm install multer-ibm-cos-storage
+npm install multer-cos-storage
