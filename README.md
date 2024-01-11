@@ -1,4 +1,4 @@
-## Multer IBM COS Storage
+## Multer Cloud Storage
 
 Cloud Object Storages as the storage engine for [multer](https://github.com/expressjs/multer)
 
