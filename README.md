@@ -7,5 +7,5 @@ This package extends [Multer](https://github.com/expressjs/multer), a Node.js mi
 To install the package, run the following command in your project directory:
 
 ```bash
-npm install multer-cloud-storage
+npm install multer-cloud
 ```

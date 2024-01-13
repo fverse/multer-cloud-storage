@@ -1,7 +1,7 @@
 {
-  "name": "multer-ibm-cos-storage",
-  "version": "1.0.2",
-  "description": "IBM Cloud Object Storage as the storage engine for Multer",
+  "name": "multer-cloud",
+  "version": "1.0.4",
+  "description": "Use cloud storage solutions like IBM COS, Aws S3 and Azure Blob Storage as the storage engine for Multer",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,10 +19,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fverse/multer-ibm-cos-storage.git"
+    "url": "git+https://github.com/fverse/multer-cloud-storage.git"
   },
   "bugs": {
-    "url": "https://github.com/fverse/multer-ibm-cos-storage/issues"
+    "url": "https://github.com/fverse/multer-cloud-storage/issues"
   },
-  "homepage": "https://github.com/fverse/multer-ibm-cos-storage#readme"
+  "homepage": "https://github.com/fverse/multer-cloud-storage#readme"
 }
