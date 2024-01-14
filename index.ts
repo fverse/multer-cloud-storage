@@ -79,8 +79,7 @@ const validateStorageParams = (params: StorageParams) => {
   if (!params.apiKeyId)
     errors.push({
       param: "apiKeyId",
-      message:
-        "Failed to upload file: API KEY ID cannot be empty.",
+      message: "Failed to upload file: API KEY ID cannot be empty.",
     });
 
   if (!params.serviceInstanceId)
@@ -94,7 +93,7 @@ const validateStorageParams = (params: StorageParams) => {
   }
 };
 
-class CosStorage implements StorageEngine {
+class IbmCosStorage implements StorageEngine {
   private cos: ibm.S3;
   private bucket;
   private getObjectKey: any;
@@ -185,7 +184,7 @@ class CosStorage implements StorageEngine {
  * @param {StorageParams} params - Configuration options for COS and Multer.
  * @returns A Multer instance configured for multiple file uploads.
  *
- * This function sets up Multer with a custom `CosStorage` engine for handling
+ * This function sets up Multer with a custom `IbmCosStorage` engine for handling
  * uploads directly to a specified COS bucket.
  *
  * It includes an optional file filter (defined in `opts.fileFilter`) to validate file types.
@@ -202,7 +201,7 @@ export const cosMultipleUpload = (params: StorageParams) => {
   validateStorageParams(params);
   return multer({
     fileFilter: params.fileFilter,
-    storage: new CosStorage({
+    storage: new IbmCosStorage({
       bucket: params.bucket,
       key: params.key,
       endpoint: params.endpoint,
@@ -219,7 +218,7 @@ export const cosMultipleUpload = (params: StorageParams) => {
  * @param {StorageParams} params - Configuration options for COS and Multer.
  * @returns A Multer instance for single file uploads.
  *
- * The function configures Multer with a custom `CosStorage` engine and optional file filtering.
+ * The function configures Multer with a custom `IbmCosStorage` engine and optional file filtering.
  * You could pass a multer fileFilter function to the `opts.fileFilter`.
  *
  * The field name is customizable through `opts.fieldName`. Defaults to 'file' if not specified.
@@ -233,7 +232,7 @@ export const cosSingleUpload = (params: StorageParams) => {
   validateStorageParams(params);
   return multer({
     fileFilter: params.fileFilter,
-    storage: new CosStorage({
+    storage: new IbmCosStorage({
       bucket: params.bucket,
       key: params.key,
       endpoint: params.endpoint,
@@ -244,4 +243,4 @@ export const cosSingleUpload = (params: StorageParams) => {
   }).single(params.fieldName || "file");
 };
 
-export default (opts: StorageParams) => new CosStorage(opts);
+export const CosStorage = (opts: StorageParams) => new IbmCosStorage(opts);
