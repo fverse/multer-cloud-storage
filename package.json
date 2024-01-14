@@ -1,8 +1,9 @@
 {
   "name": "multer-custom-storage",
-  "version": "1.0.6",
+  "version": "1.0.9",
   "description": "Use cloud storage solutions like IBM COS, Aws S3 and Azure Blob Storage as the storage engine for Multer",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
